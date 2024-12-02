@@ -44,10 +44,17 @@ public class IT2DPATENIOBDCS {
                     dr.addDocumentRequest();
                     break;
                 case 4:
+                    ViewReports vr= new ViewReports();
+                    vr.viewReport();
                     break;
                 case 5:
                     System.out.print("Exiting...Are you sure? (yes/no): ");
                     String resp = sc.next();
+                     while (!(resp.equalsIgnoreCase("yes") || resp.equalsIgnoreCase("no"))) {
+                    System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                    System.out.print("Do you want to make another transaction? (yes/no): ");
+                    resp = sc.next();
+                }
                     if (resp.equalsIgnoreCase("yes")) {
                         exit = false;
                     }

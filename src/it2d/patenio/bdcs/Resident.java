@@ -1,4 +1,3 @@
-
 package it2d.patenio.bdcs;
 
 import java.util.Scanner;
@@ -23,8 +22,6 @@ public class Resident {
             while (!sc.hasNextInt()) {
                 System.out.println("Invalid input. Please enter a number between 1 and 5.");
                 sc.next(); 
-                
-                
                 System.out.print("Enter Action: ");
             }
             int action = sc.nextInt();
@@ -54,6 +51,13 @@ public class Resident {
                 case 5:
                     System.out.print("Exiting...Are you sure? (yes/no): ");
                     String resp = sc.next();
+                    
+                    while (!(resp.equalsIgnoreCase("yes") || resp.equalsIgnoreCase("no"))) {
+                    System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                    System.out.print("Do you want to make another transaction? (yes/no): ");
+                    resp = sc.next();
+                }
+                    
                     if (resp.equalsIgnoreCase("yes")) {
                         exit = false;
                     }
@@ -63,29 +67,68 @@ public class Resident {
                     System.out.println("Invalid option. Please try again.");
                     break;
             }
-             if (action >= 1 && action <= 4) {
-            System.out.print("Do you want to make another transaction? (yes/no): ");
-            response = sc.next();
-            if (!response.equalsIgnoreCase("yes")) {
-                exit = false;
-            }
-        }
-        } while (exit);
-    }
 
-    public void addResidents() {
+            if (action >= 1 && action <= 4) {
+                System.out.print("Do you want to make another transaction? (yes/no): ");
+                response = sc.next();
+
+                while (!(response.equalsIgnoreCase("yes") || response.equalsIgnoreCase("no"))) {
+                    System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                    System.out.print("Do you want to make another transaction? (yes/no): ");
+                    response = sc.next();
+                }
+
+              
+                if (response.equalsIgnoreCase("no")) {
+                    exit = false;
+                }
+            }
+
+        } while (exit);  
+
+        System.out.println("Thank you for using!");
+    }
+    
+
+
+    public void addResidents(){
         Scanner sc = new Scanner(System.in);
 
         config conf = new config();
 
-        System.out.print("First Name: ");
+       System.out.print("First Name: ");
         String fname = sc.nextLine();
+        while (fname.matches(".*\\d.*")) {
+         System.out.println("Invalid input. Please enter a valid First Name (no numbers allowed).");
+         fname = sc.nextLine();
+}
         System.out.print("Last Name: ");
         String lname = sc.nextLine();
+        
+         while (lname.matches(".*\\d.*")) {
+         System.out.println("Invalid input. Please enter a valid Last Name (no numbers allowed).");
+         lname = sc.nextLine();
+}
+       
         System.out.print("Address: ");
         String address = sc.nextLine();
+        
+        
         System.out.print("Civil Status: ");
         String status = sc.nextLine();
+        
+        while (!status.equalsIgnoreCase("single") && 
+               !status.equalsIgnoreCase("married") && 
+               !status.equalsIgnoreCase("separated") && 
+               !status.equalsIgnoreCase("divorced") && 
+               !status.equalsIgnoreCase("widowed")) {
+            System.out.println("Invalid input. Please enter one of the following: single, married, separated, divorced, or widowed.: ");
+            status = sc.nextLine(); 
+        }
+        
+        
+        
+        
 
         String sql = "INSERT INTO tbl_resident (r_fname, r_lname, r_address, r_cstatus) VALUES (?, ?, ?, ?)";
 
@@ -117,15 +160,39 @@ public class Resident {
 
         System.out.print("New First Name: ");
         String fname = sc.nextLine();
+        
+         while (fname.matches(".*\\d.*")) {
+         System.out.println("Invalid input. Please enter a valid First Name (no numbers allowed).");
+         fname = sc.nextLine();
+}
+        
+        
         System.out.print("New Last Name: ");
         String lname = sc.nextLine();
+        
+        while (lname.matches(".*\\d.*")) {
+         System.out.println("Invalid input. Please enter a valid Last Name (no numbers allowed).: ");
+         lname = sc.nextLine();
+}
+        
         System.out.print("New Address: ");
         String address = sc.nextLine();
+        
+        
         System.out.print("New Civil Status: ");
         String status = sc.next();
 
+      while (!status.equalsIgnoreCase("single") && 
+               !status.equalsIgnoreCase("married") && 
+               !status.equalsIgnoreCase("separated") && 
+               !status.equalsIgnoreCase("divorced") && 
+               !status.equalsIgnoreCase("widowed")) {
+            System.out.println("Invalid input. Please enter one of the following: single, married, separated, divorced, or widowed.: ");
+            status = sc.nextLine(); 
+        }
+        
         String sql = "UPDATE tbl_resident SET r_fname = ?, r_lname = ?, r_address = ?, r_cstatus = ? WHERE r_id = ?";
-        conf.updateResident(sql, fname, lname, address, status, id); // parameterize the name in the question mark
+        conf.updateResident(sql, fname, lname, address, status, id); 
     }
 
     public void deleteResidents() {
@@ -139,6 +206,11 @@ public class Resident {
             System.out.print("Enter Resident ID to delete: ");
         }
         int id = sc.nextInt();
+        
+         if (id <= 0) {
+        System.out.println("Document ID must be a positive integer.");
+        return;
+    }
 
         String sql = "DELETE FROM tbl_resident WHERE r_id = ?";
         conf.deleteResident(sql, id);

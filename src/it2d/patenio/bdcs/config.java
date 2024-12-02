@@ -15,7 +15,6 @@ public static Connection connectDB() {
         try {
             Class.forName("org.sqlite.JDBC"); // Load the SQLite JDBC driver
             con = DriverManager.getConnection("jdbc:sqlite:patenio.db"); // Establish connection
-            System.out.println("Connection Successful");
         } catch (Exception e) {
             System.out.println("Connection Failed: " + e);
         }
@@ -368,42 +367,43 @@ public static Connection connectDB() {
     //VIEW METHOD
     //----------------------------------------------------
 
-    public void viewDocreq(String sqlQuery, String[] columnHeaders, String[] columnNames) {
-        // Check that columnHeaders and columnNames arrays are the same length
-        if (columnHeaders.length != columnNames.length) {
-            System.out.println("Error: Mismatch between column headers and column names.");
-            return;
-        }
-
-        try (Connection conn = this.connectDB();
-             PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
-             ResultSet rs = pstmt.executeQuery()) {
-
-            // Print the headers dynamically
-            StringBuilder headerLine = new StringBuilder();
-            headerLine.append("--------------------------------------------------------------------------------\n| ");
-            for (String header : columnHeaders) {
-                headerLine.append(String.format("%-30s | ", header)); 
-            }
-            headerLine.append("\n--------------------------------------------------------------------------------");
-
-            System.out.println(headerLine.toString());
-
-           
-            while (rs.next()) {
-                StringBuilder row = new StringBuilder("| ");
-                for (String colName : columnNames) {
-                    String value = rs.getString(colName);
-                    row.append(String.format("%-30s | ", value != null ? value : "")); 
-                }
-                System.out.println(row.toString());
-            }
-            System.out.println("--------------------------------------------------------------------------------");
-
-        } catch (SQLException e) {
-            System.out.println("Error retrieving records: " + e.getMessage());
-        }
+  public void viewDocreq(String sqlQuery, String[] columnHeaders, String[] columnNames) {
+    // Check that columnHeaders and columnNames arrays are the same length
+    if (columnHeaders.length != columnNames.length) {
+        System.out.println("Error: Mismatch between column headers and column names.");
+        return;
     }
+
+    try (Connection conn = this.connectDB();  // Establish the connection
+         PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+         ResultSet rs = pstmt.executeQuery()) {  // Execute the query
+
+        // Print the headers dynamically
+        StringBuilder headerLine = new StringBuilder();
+        headerLine.append("---------------------------------------------------------------------------------------------------------------------------------------------\n| ");
+        for (String header : columnHeaders) {
+            headerLine.append(String.format("%-25s | ", header));                                                                                                      
+        }
+        headerLine.append("\n---------------------------------------------------------------------------------------------------------------------------------------------");
+
+        System.out.println(headerLine.toString());
+
+        // Process and print each row from the result set
+        while (rs.next()) {
+            StringBuilder row = new StringBuilder("| ");
+            for (String colName : columnNames) {
+                String value = rs.getString(colName);
+                row.append(String.format("%-25s | ", value != null ? value : "")); 
+            }
+            System.out.println(row.toString());
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------");
+
+    } catch (SQLException e) {
+        System.out.println("Error retrieving records: " + e.getMessage());
+    }
+}
+
     
      //-----------------------------------------------
     // UPDATE METHOD
@@ -513,4 +513,49 @@ public static Connection connectDB() {
         }
         return result;
     }
+    
+    
+    //-----------------------------------------------
+    // RESULT SET STORATION
+    //-----------------------------------------------
+    
+    
+    public ResultSet getData(String query, int residentId) {
+        ResultSet resultSet = null;
+        try {
+           
+            Connection conn = connectDB();
+            if (conn != null) {
+                
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, residentId);  
+
+                // Execute the query and get the result
+                resultSet = stmt.executeQuery();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    // Method to print the result set with headers
+   // Method to print the result set with headers
+public void printResultSet(ResultSet rs, String[] headers) {
+    try {
+        // Print headers
+        System.out.println(String.join("\t", headers));
+
+        // Print rows
+        while (rs.next()) {
+            for (String header : headers) {
+                System.out.print(rs.getString(header) + "\t");
+            }
+            System.out.println();
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
 }
