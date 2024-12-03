@@ -58,7 +58,7 @@ public class DocumentRequest {
                 String resp = sc.next();
                 
                  while (!(resp.equalsIgnoreCase("yes") || resp.equalsIgnoreCase("no"))) {
-                    System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                    System.out.println("Invalid input. Please enter 'yes' or 'no': ");
                     System.out.print("Do you want to make another transaction? (yes/no): ");
                     resp = sc.next();
                 }
@@ -77,7 +77,7 @@ public class DocumentRequest {
                 response = sc.next();
 
                 while (!(response.equalsIgnoreCase("yes") || response.equalsIgnoreCase("no"))) {
-                    System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                    System.out.println("Invalid input. Please enter 'yes' or 'no': ");
                     System.out.print("Do you want to make another transaction? (yes/no): ");
                     response = sc.next();
                 }
@@ -126,7 +126,7 @@ public void addDocreqs() {
     
     System.out.print("Number of Copies: ");
     while (!sc.hasNextDouble()) {
-        System.out.println("Invalid input. Please enter a valid number of copies.");
+        System.out.println("Invalid input. Please enter a valid number of copies:");
         sc.next();
         System.out.print("Number of Copies: ");
     }
@@ -215,7 +215,7 @@ private void updateDocreqs() {
  
     System.out.print("Enter Document ID to update: ");
     while (!sc.hasNextInt()) {
-        System.out.println("Invalid input. Please enter a valid Document ID.");
+        System.out.println("Invalid input. Please enter a valid Document ID: ");
         sc.next();
         System.out.print("Enter Document ID to update: ");
     }
@@ -224,7 +224,7 @@ private void updateDocreqs() {
   
     System.out.println("New number of copies: ");
     while (!sc.hasNextInt()) {
-        System.out.println("Invalid input. Please enter a valid number of copies.");
+        System.out.println("Invalid input. Please enter a valid number of copies: ");
         sc.next();
         System.out.println("New number of copies: ");
     }
@@ -247,17 +247,27 @@ public void deleteDocreqs() {
     Scanner sc = new Scanner(System.in);
     config conf = new config();
 
-   
-    System.out.print("Enter Document ID to delete: ");
-    while (!sc.hasNextInt()) {
-        System.out.println("Invalid input. Please enter a valid Document ID.");
-        sc.next();
+    while (true) {
         System.out.print("Enter Document ID to delete: ");
-    }
-    int id = sc.nextInt();
+        
+        while (!sc.hasNextInt()) {
+            System.out.println("Invalid input. Please enter a valid Document ID: ");
+            sc.next();
+            System.out.print("Enter Document ID to delete: ");
+        }
+        
+        int id = sc.nextInt();
 
-    
-    String sql = "DELETE FROM tbl_documentRequest WHERE dr_id = ?";
-    conf.deleteDocreq(sql, id);
+        if (id <= 0) {
+            System.out.println("Invalid Document ID. Please enter a positive integer.");
+            continue; 
+        }
+
+        String sql = "DELETE FROM tbl_documentRequest WHERE dr_id = ?";
+        conf.deleteDocreq(sql, id);
+        System.out.println("Document Request with ID " + id + " has been deleted.");
+        
+        break;
+    }
 }
 }

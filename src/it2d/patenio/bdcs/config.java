@@ -29,6 +29,40 @@ public static Connection connectDB() {
     //----------------------------------------------------
     //ADD METHOD
     //----------------------------------------------------
+
+public boolean residentExists(int id) {
+    String sqlCheck = "SELECT COUNT(*) FROM tbl_resident WHERE r_id = ?";
+    try (Connection conn = connectDB();
+         PreparedStatement pstmt = conn.prepareStatement(sqlCheck)) {
+        
+        pstmt.setInt(1, id);
+        ResultSet rs = pstmt.executeQuery();
+        
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // Returns true if count is greater than 0
+        }
+    } catch (SQLException e) {
+        System.out.println("Error checking resident existence: " + e.getMessage());
+    }
+    return false;
+}
+
+public boolean documentExists(int id) {
+    String sqlCheck = "SELECT COUNT(*) FROM tbl_tdocument WHERE t_id = ?";
+    try (Connection conn = connectDB();
+         PreparedStatement pstmt = conn.prepareStatement(sqlCheck)) {
+        
+        pstmt.setInt(1, id);
+        ResultSet rs = pstmt.executeQuery();
+        
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // Returns true if count is greater than 0
+        }
+    } catch (SQLException e) {
+        System.out.println("Error checking document existence: " + e.getMessage());
+    }
+    return false;
+}
     
     public void addResident(String sql, Object... values) {
     try (Connection conn = config.connectDB(); // Use the connectDB method
@@ -82,11 +116,11 @@ public static Connection connectDB() {
 
             // Print the headers dynamically
             StringBuilder headerLine = new StringBuilder();
-            headerLine.append("--------------------------------------------------------------------------------\n| ");
+            headerLine.append("-----------------------------------------------------------------------------------------------------------------------------------------------\n| ");
             for (String header : columnHeaders) {
                 headerLine.append(String.format("%-30s | ", header)); // Adjust formatting as needed
             }
-            headerLine.append("\n--------------------------------------------------------------------------------");
+            headerLine.append("\n-----------------------------------------------------------------------------------------------------------------------------------------------");
 
             System.out.println(headerLine.toString());
 
@@ -99,7 +133,7 @@ public static Connection connectDB() {
                 }
                 System.out.println(row.toString());
             }
-            System.out.println("--------------------------------------------------------------------------------");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------");
 
         } catch (SQLException e) {
             System.out.println("Error retrieving records: " + e.getMessage());
@@ -231,11 +265,11 @@ public static Connection connectDB() {
 
             // Print the headers dynamically
             StringBuilder headerLine = new StringBuilder();
-            headerLine.append("--------------------------------------------------------------------------------\n| ");
+             headerLine.append("----------------------------------------------------------------------------------------------------\n| ");
             for (String header : columnHeaders) {
                 headerLine.append(String.format("%-30s | ", header)); // Adjust formatting as needed
             }
-            headerLine.append("\n--------------------------------------------------------------------------------");
+            headerLine.append("\n----------------------------------------------------------------------------------------------------");
 
             System.out.println(headerLine.toString());
 
@@ -248,7 +282,7 @@ public static Connection connectDB() {
                 }
                 System.out.println(row.toString());
             }
-            System.out.println("--------------------------------------------------------------------------------");
+             System.out.println("----------------------------------------------------------------------------------------------------");
 
         } catch (SQLException e) {
             System.out.println("Error retrieving records: " + e.getMessage());
@@ -380,11 +414,11 @@ public static Connection connectDB() {
 
         // Print the headers dynamically
         StringBuilder headerLine = new StringBuilder();
-        headerLine.append("---------------------------------------------------------------------------------------------------------------------------------------------\n| ");
+        headerLine.append("-----------------------------------------------------------------------------------------------------------------\n| ");
         for (String header : columnHeaders) {
             headerLine.append(String.format("%-25s | ", header));                                                                                                      
         }
-        headerLine.append("\n---------------------------------------------------------------------------------------------------------------------------------------------");
+        headerLine.append("\n-----------------------------------------------------------------------------------------------------------------");
 
         System.out.println(headerLine.toString());
 
@@ -397,7 +431,7 @@ public static Connection connectDB() {
             }
             System.out.println(row.toString());
         }
-        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("-----------------------------------------------------------------------------------------------------------------");
 
     } catch (SQLException e) {
         System.out.println("Error retrieving records: " + e.getMessage());
@@ -558,4 +592,9 @@ public void printResultSet(ResultSet rs, String[] headers) {
     }
 }
 
+    int checkResidentExists(String sqlCheck, int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
 }

@@ -20,7 +20,7 @@ public class ViewReports {
             
             System.out.print("Enter Action: ");
             while (!sc.hasNextInt()) {
-                System.out.println("Invalid input. Please enter a number between 1 and 5.");
+                System.out.println("Invalid input. Please enter a number between 1 and 5: ");
                 sc.next(); 
                 
                 System.out.print("Enter Action: ");
@@ -47,7 +47,7 @@ public class ViewReports {
                     break;
 
                 default:
-                    System.out.println("Invalid option. Please try again.");
+                    System.out.println("Invalid option. Please try again: ");
                     break;
             }
               if (action >= 1 && action <= 2) {

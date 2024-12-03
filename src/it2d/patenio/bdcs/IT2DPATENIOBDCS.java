@@ -14,7 +14,7 @@ public class IT2DPATENIOBDCS {
             System.out.println("1. Add Resident");
             System.out.println("2. Add Type of Document");
             System.out.println("3. Document Request");
-            System.out.println("4. View Individual Report ");
+            System.out.println("4. View Report ");
             System.out.println("5. Exit");
 
             System.out.print("Enter Action: ");
