@@ -20,9 +20,8 @@ public class TypeofDocument {
 
             System.out.print("Enter Action: ");
             while (!sc.hasNextInt()) {
-                System.out.println("Invalid input. Please enter a number between 1 and 5.");
+                System.out.println("Invalid input. Please enter a number between 1 and 5: ");
                 sc.next();
-                System.out.print("Enter Action: ");
             }
             
             int action = sc.nextInt();
@@ -55,7 +54,6 @@ public class TypeofDocument {
                     
                     while (!(resp.equalsIgnoreCase("yes") || resp.equalsIgnoreCase("no"))) {
                     System.out.println("Invalid input. Please enter 'yes' or 'no': ");
-                    System.out.print("Do you want to make another transaction? (yes/no): ");
                     resp = sc.next();
                 }
                     if (resp.equalsIgnoreCase("yes")) {
@@ -64,7 +62,7 @@ public class TypeofDocument {
                     break;
 
                default:
-                    System.out.println("Invalid option. Please try again: ");
+                    System.out.print("Invalid option. Please try again: ");
                     break;
             }
 
@@ -74,7 +72,6 @@ public class TypeofDocument {
 
                 while (!(response.equalsIgnoreCase("yes") || response.equalsIgnoreCase("no"))) {
                     System.out.println("Invalid input. Please enter 'yes' or 'no': ");
-                    System.out.print("Do you want to make another transaction? (yes/no): ");
                     response = sc.next();
                 }
 
@@ -86,7 +83,7 @@ public class TypeofDocument {
 
         } while (exit); 
 
-        System.out.println("Thank you for using!");
+        System.out.print("Thank you for using!");
     }
 
     public void addDoctype() {
@@ -104,7 +101,7 @@ public class TypeofDocument {
         if (!dname.isEmpty() && dname.matches("[a-zA-Z ]+")) {
             break; 
         } else {
-            System.out.println("Invalid input. Document name must only contain alphabetic characters and spaces: ");
+            System.out.print("Invalid input. Document name must only contain alphabetic characters and spaces: ");
         }
     }
 
@@ -117,10 +114,10 @@ public class TypeofDocument {
             tprice = sc.nextDouble();
 
             if (tprice <= 0) {
-                System.out.println("Price must be greater than zero. Please enter a valid price: ");
+                System.out.print("Price must be greater than zero. Please enter a valid price: ");
             }
         } else {
-            System.out.println("Invalid input. Please enter a valid numeric price: ");
+            System.out.print("Invalid input. Please enter a valid numeric price: ");
             sc.next();
         }
     }
@@ -148,24 +145,23 @@ private void updateDoctype() {
     while (id <= 0) {
         System.out.print("Enter Document ID to update: ");
         while (!sc.hasNextInt()) {
-            System.out.println("Invalid input. Please enter a valid Document ID: ");
+            System.out.print("Invalid input. Please enter a valid Document ID: ");
             sc.next(); 
-            System.out.print("Enter Document ID to update: ");
         }
         id = sc.nextInt();
 
-        // Check if the document exists
         if (!conf.documentExists(id)) {
-            System.out.println("Error: Document ID " + id + " does not exist: ");
-            return; // Exit the method if the ID does not exist
+            System.out.print("Document ID " + id + " does not exist: ");
+            id = -1;
         }
     }
+
 
     double price = -1;
     while (price <= 0) {
         System.out.print("New Price: ");
         while (!sc.hasNextDouble()) {
-            System.out.println("Invalid input. Please enter a valid price: ");
+            System.out.print("Invalid! Please enter a valid price: ");
             sc.next();
             System.out.print("New Price: ");
         }
@@ -190,7 +186,7 @@ private void updateDoctype() {
         System.out.print("Enter Document ID to delete: ");
         
         while (!sc.hasNextInt()) {
-            System.out.println("Invalid input. Please enter a valid Document ID.");
+            System.out.print("Invalid! Please enter a valid Document ID.");
             sc.next();  
             System.out.print("Enter Document ID to delete: ");
         }
@@ -198,18 +194,18 @@ private void updateDoctype() {
         id = sc.nextInt();
 
         if (id <= 0) {
-            System.out.println("Invalid Document ID. Please enter a positive integer.");
+            System.out.print("Invalid Document ID! Please enter a positive integer.");
             continue; 
         }
 
         if (!conf.documentExists(id)) {
-            System.out.println("Error: Document ID " + id + " does not exist. Enter a valid resident ID.");
+            System.out.print("Document ID " + id + " does not exist. Enter a valid resident ID.");
             continue; 
         }
 
         String sql = "DELETE FROM tbl_tdocument WHERE t_id = ?";
         conf.deleteDtype(sql, id);
-        System.out.println("Document with ID " + id + " has been deleted.");
+        System.out.print("Document with ID " + id + " has been deleted.");
         
         break;
     }

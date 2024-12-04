@@ -2,7 +2,6 @@
 package it2d.patenio.bdcs;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
@@ -25,9 +24,8 @@ public class DocumentRequest {
 
         System.out.print("Enter Action: ");
         while (!sc.hasNextInt()) {
-            System.out.println("Invalid input. Please enter a number between 1 and 5.");
+            System.out.println("Invalid input. Please enter a number between 1 and 5: ");
             sc.next(); 
-            System.out.print("Enter Action: ");
         }
         int action = sc.nextInt();
         DocumentRequest dr = new DocumentRequest();
@@ -78,7 +76,6 @@ public class DocumentRequest {
 
                 while (!(response.equalsIgnoreCase("yes") || response.equalsIgnoreCase("no"))) {
                     System.out.println("Invalid input. Please enter 'yes' or 'no': ");
-                    System.out.print("Do you want to make another transaction? (yes/no): ");
                     response = sc.next();
                 }
 
@@ -126,13 +123,12 @@ public void addDocreqs() {
     
     System.out.print("Number of Copies: ");
     while (!sc.hasNextDouble()) {
-        System.out.println("Invalid input. Please enter a valid number of copies:");
+        System.out.print("Invalid input. Please enter a valid number of copies:");
         sc.next();
-        System.out.print("Number of Copies: ");
     }
     double numcop = sc.nextDouble();
     if (numcop <= 0) {
-        System.out.println("Number of copies must be greater than zero.");
+        System.out.print("Number of copies must be greater than zero: ");
         return;
     }
     
@@ -198,75 +194,70 @@ public void addDocreqs() {
 private void viewDocreqs() {
     config conf = new config();
 
-      String reqQuery = "SELECT tbl_resident.r_id, tbl_tdocument.t_name, tbl_documentRequest.dr_status, tbl_documentRequest.dr_releasedate "
-    + "FROM tbl_documentRequest " +"LEFT JOIN tbl_resident ON tbl_resident.r_id = tbl_documentRequest.r_id " 
-    + "LEFT JOIN tbl_tdocument ON tbl_tdocument.t_id = tbl_documentRequest.t_id";
+    String reqQuery = "SELECT tbl_documentRequest.dr_id, tbl_resident.r_id, tbl_tdocument.t_name, tbl_documentRequest.dr_status "
+            + "FROM tbl_documentRequest "
+            + "LEFT JOIN tbl_resident ON tbl_resident.r_id = tbl_documentRequest.r_id "
+            + "LEFT JOIN tbl_tdocument ON tbl_tdocument.t_id = tbl_documentRequest.t_id";
 
-    String[] reqHeaders = {"Resident ID", "Type of Document", "Status", "Release Date"};
-    String[] reqColumns = {"r_id", "t_name", "dr_status", "dr_releasedate"};
+    String[] reqHeaders = {"Document Request ID", "Resident ID", "Type of Document", "Status"};
+    String[] reqColumns = {"dr_id", "r_id", "t_name", "dr_status"};
 
     conf.viewDocreq(reqQuery, reqHeaders, reqColumns);
 }
+
+
 
 private void updateDocreqs() {
     Scanner sc = new Scanner(System.in);
     config conf = new config();
 
- 
-    System.out.print("Enter Document ID to update: ");
+    System.out.print("Enter Document Request ID to update: ");
     while (!sc.hasNextInt()) {
-        System.out.println("Invalid input. Please enter a valid Document ID: ");
+        System.out.print("Invalid input. Please enter a valid Document Request ID: ");
         sc.next();
-        System.out.print("Enter Document ID to update: ");
+        System.out.print("Enter Document Request ID to update: ");
     }
     int id = sc.nextInt();
 
-  
-    System.out.println("New number of copies: ");
-    while (!sc.hasNextInt()) {
-        System.out.println("Invalid input. Please enter a valid number of copies: ");
-        sc.next();
-        System.out.println("New number of copies: ");
-    }
-    int numc = sc.nextInt();
-
- 
-    System.out.println("New Status (Pending/Approved): ");
+    System.out.print("New Status (Pending/Approved): ");
     String status = sc.next();
 
-    
-    System.out.println("New Release Date (MM/DD/YYYY): ");
-    String date = sc.nextLine();
+    System.out.print("New Release Date (MM/DD/YYYY): ");
+    String date = sc.next();
 
-    
-    String sql = "UPDATE tbl_documentRequest SET dr_status = ?, dr_releasedate = ? WHERE dr_id = ?";
+    String sql = "UPDATE tbl_documentRequest SET dr_releasedate = ? WHERE dr_id = ?";
     conf.updateDocreq(sql, status, date, id);
 }
+
 
 public void deleteDocreqs() {
     Scanner sc = new Scanner(System.in);
     config conf = new config();
 
     while (true) {
-        System.out.print("Enter Document ID to delete: ");
-        
+        System.out.print("Enter Document Request ID to delete: ");
+
         while (!sc.hasNextInt()) {
-            System.out.println("Invalid input. Please enter a valid Document ID: ");
+            System.out.println("Invalid input! Please enter a valid Document Request ID: ");
             sc.next();
-            System.out.print("Enter Document ID to delete: ");
+            System.out.print("Enter Document Request ID to delete: ");
         }
-        
+
         int id = sc.nextInt();
+        if (!conf.documentExists(id)) {
+            System.out.println("Document Request ID " + id + " does not exist.");
+            return;
+        }
 
         if (id <= 0) {
-            System.out.println("Invalid Document ID. Please enter a positive integer.");
-            continue; 
+            System.out.print("Invalid Document Request ID. Please enter a positive integer.");
+            continue;
         }
 
         String sql = "DELETE FROM tbl_documentRequest WHERE dr_id = ?";
         conf.deleteDocreq(sql, id);
         System.out.println("Document Request with ID " + id + " has been deleted.");
-        
+
         break;
     }
 }

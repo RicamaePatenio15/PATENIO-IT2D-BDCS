@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class config {
@@ -595,6 +597,37 @@ public void printResultSet(ResultSet rs, String[] headers) {
     int checkResidentExists(String sqlCheck, int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+
+    // Method to get all transaction IDs for a document
+    private List<Integer> getTransactionsByDocumentId(int documentId) {
+        List<Integer> transactionIds = new ArrayList<>();
+        String query = "SELECT dr_id FROM tbl_documentRequest WHERE dr_document_id = ?";
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/your_database", "username", "password");
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, documentId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                transactionIds.add(rs.getInt("dr_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactionIds;
+    }
+
+    // Method to delete a document request by its ID
+    private void deleteDocumentRequest(int transactionId) {
+        String sql = "DELETE FROM tbl_documentRequest WHERE dr_id = ?";
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/your_database", "username", "password");
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, transactionId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
 
     
-}
+
