@@ -63,7 +63,7 @@ public class ViewReports {
    public void GeneralReport() {
     config conf = new config();  
 
-           System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------");
+           System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------");
            System.out.println("                                                GENERAL REPORT                                                                                ");
            System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------");
      
@@ -80,7 +80,7 @@ String[] reqHeaders = {"Resident ID", "Type of Document", "Number of Copies", "S
 String[] reqColumns = {"r_id", "t_name", "dr_numcop", "dr_status", "dr_date"};
 
 
-    conf.viewDocreq(reqQuery, reqHeaders, reqColumns);
+    conf.viewDocs(reqQuery, reqHeaders, reqColumns);
 }
 
 
@@ -117,10 +117,11 @@ String[] reqColumns = {"r_id", "t_name", "dr_numcop", "dr_status", "dr_date"};
 
     // Get the data from the database for the specific resident
     ResultSet resultSet = conf.getData(reqQuery, residentId);
-
-           System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------");
-           System.out.println("                                                      INDIVIDUAL REPORT                                                                       ");
-           System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------");
+            
+           System.out.println("\n");
+           System.out.println("\n-----------------------------------------------------------------------------------------------------------------------------------------------------");
+           System.out.println("                                                        INDIVIDUAL REPORT                                                                              ");
+           System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------");
 
     // Initialize variables to store resident info
     String fname = "";

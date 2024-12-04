@@ -118,11 +118,11 @@ public boolean documentExists(int id) {
 
             // Print the headers dynamically
             StringBuilder headerLine = new StringBuilder();
-            headerLine.append("-----------------------------------------------------------------------------------------------------------------------------------------------\n| ");
+            headerLine.append("----------------------------------------------------------------------------------------------------------------------------------------------------------------------\n| ");
             for (String header : columnHeaders) {
                 headerLine.append(String.format("%-30s | ", header)); // Adjust formatting as needed
             }
-            headerLine.append("\n-----------------------------------------------------------------------------------------------------------------------------------------------");
+            headerLine.append("\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
             System.out.println(headerLine.toString());
 
@@ -135,7 +135,7 @@ public boolean documentExists(int id) {
                 }
                 System.out.println(row.toString());
             }
-            System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
         } catch (SQLException e) {
             System.out.println("Error retrieving records: " + e.getMessage());
@@ -627,6 +627,45 @@ public void printResultSet(ResultSet rs, String[] headers) {
             e.printStackTrace();
         }
     }
+    
+    public void viewDocs(String sqlQuery, String[] columnHeaders, String[] columnNames) {
+    // Check that columnHeaders and columnNames arrays are the same length
+    if (columnHeaders.length != columnNames.length) {
+        System.out.println("Error: Mismatch between column headers and column names.");
+        return;
+    }
+
+    try (Connection conn = this.connectDB();  // Establish the connection
+         PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+         ResultSet rs = pstmt.executeQuery()) {  // Execute the query
+
+        // Print the headers dynamically
+        StringBuilder headerLine = new StringBuilder();
+        headerLine.append("---------------------------------------------------------------------------------------------------------------------------------------------\n| ");
+        for (String header : columnHeaders) {
+            headerLine.append(String.format("%-25s | ", header));                                                                                                      
+        }
+        headerLine.append("\n---------------------------------------------------------------------------------------------------------------------------------------------");
+
+        System.out.println(headerLine.toString());
+
+        // Process and print each row from the result set
+        while (rs.next()) {
+            StringBuilder row = new StringBuilder("| ");
+            for (String colName : columnNames) {
+                String value = rs.getString(colName);
+                row.append(String.format("%-25s | ", value != null ? value : "")); 
+            }
+            System.out.println(row.toString());
+        }
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------");
+
+    } catch (SQLException e) {
+        System.out.println("Error retrieving records: " + e.getMessage());
+    }
+}
+
+    
 }
 
     
